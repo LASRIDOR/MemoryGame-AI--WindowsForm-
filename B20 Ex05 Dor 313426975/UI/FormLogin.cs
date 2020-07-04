@@ -5,12 +5,13 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using MemoryLogic;
 
 namespace UI
 {
-    public partial class MemoryGameUI : Form
+    public partial class FormLogin : Form
     {
-        public MemoryGameUI()
+        public FormLogin()
         {
             InitializeComponent();
         }
@@ -94,6 +95,27 @@ namespace UI
             {
                 //set game
             }
+        }
+
+        public MemoryLogic.SystemManager SetGame()
+        {
+            MemoryLogic.SystemManager gameManager = new SystemManager();
+            bool IsPlayerTwoAi = !(this.SecondPlayerNameLabel.Enabled);
+
+            gameManager.PlayerOne = new Player(this.FirstPlayerNameTextBox.Text, false);
+
+            if (IsPlayerTwoAi == true)
+            {
+                gameManager.PlayerTwo = new Player(null, true);
+            }
+            else
+            {
+                gameManager.PlayerTwo = new Player(this.SecondPlayerNameTextBox.Text, false);
+            }
+
+            gameManager.Board = new GameBoard(this.BoardSizeButtom.Text[0] - '0', this.BoardSizeButtom.Text[2] - '0');
+
+            return gameManager;
         }
     }
 }

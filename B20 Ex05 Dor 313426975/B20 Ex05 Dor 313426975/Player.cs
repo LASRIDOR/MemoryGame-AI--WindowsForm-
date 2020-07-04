@@ -18,7 +18,7 @@ namespace MemoryLogic
         {
             if (isAi == true)
             {
-                r_NameOfPlayer = "RoboMatch";
+                r_NameOfPlayer = "Computer";
                 r_AiBrain = new Ai();
             }
             else

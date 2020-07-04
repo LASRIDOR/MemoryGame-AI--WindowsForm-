@@ -6,9 +6,9 @@ namespace MemoryLogic
 {
     public class SystemManager
     {
-        private UI m_Ui = new UI();
         private Player m_PlayerOne;
         private Player m_PlayerTwo;
+        private GameBoard m_Board;
 
         public enum eTurn
         {
@@ -22,35 +22,38 @@ namespace MemoryLogic
             SecondMove = 2
         }
 
-        private Player PlayerOne
+        public Player PlayerOne
         {
             get { return m_PlayerOne; }
             set { m_PlayerOne = value; }
         }
 
-        private Player PlayerTwo
+        public Player PlayerTwo
         {
             get { return m_PlayerTwo; }
             set { m_PlayerTwo = value; }
+        }
+
+        public GameBoard Board
+        {
+            get { return m_Board; }
+            set { m_Board = value; }
         }
 
         public void PlayMatchGame()
         {
             m_PlayerOne = playerOneLogin();
             m_PlayerTwo = playerTwoLogin(m_PlayerOne.NameOfPlayer);
-            UI.printSign("Welcome To Dori's World");
             bool v_WantToPlayAnotherGame;
 
             do
             {
-                GameBoard board = makeGameBoard();
-
                 m_PlayerOne.NewGame(null, null);
                 m_PlayerTwo.NewGame(board.NumOfRows, board.NumOfCols);
-                m_Ui.printBoard(board);
+                //m_Ui.printBoard(board);
                 gameRoutineAndKeepScore(board);
-                m_Ui.announceOnTheWinner(m_PlayerOne, m_PlayerTwo);
-                v_WantToPlayAnotherGame = UI.askForAnotherGame(m_PlayerOne.NameOfPlayer, m_PlayerTwo.NameOfPlayer);
+                //m_Ui.announceOnTheWinner(m_PlayerOne, m_PlayerTwo);
+                //v_WantToPlayAnotherGame = UI.askForAnotherGame(m_PlayerOne.NameOfPlayer, m_PlayerTwo.NameOfPlayer);
             }
             while (v_WantToPlayAnotherGame == true);
         }
@@ -73,7 +76,6 @@ namespace MemoryLogic
             string nameOfPlayerTwo = null;
             bool v_WantToPlayVsCompter;
 
-            UI.printSign("Player Two Login");
             v_WantToPlayVsCompter = playerOneChoosingCompetition(io_NameOfPlayerOne);
 
             if (v_WantToPlayVsCompter == false)
@@ -113,8 +115,6 @@ namespace MemoryLogic
             int rowOfBoard;
             int colOfBoard;
             bool v_SizeIsValid;
-
-            UI.printSign("Choosing Board Size");
 
             do
             {
@@ -260,7 +260,6 @@ namespace MemoryLogic
         {
             io_Board.HideIcon(i_FirstMoveCoordinate);
             io_Board.HideIcon(i_SecondMoveCoordinate);
-            Ex02.ConsoleUtils.Screen.Clear();
             m_Ui.printBoard(io_Board);
         }
 
