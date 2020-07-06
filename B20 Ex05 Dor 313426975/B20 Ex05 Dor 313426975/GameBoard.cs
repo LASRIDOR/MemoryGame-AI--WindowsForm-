@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace MemoryLogic
 {
@@ -17,6 +18,11 @@ namespace MemoryLogic
             boardPreparartion();
         }
 
+        public Cube[,] Board
+        {
+            get { return m_Board; }
+        }
+
         public int NumOfRows
         {
             get { return r_NumOfRows; }
@@ -27,7 +33,7 @@ namespace MemoryLogic
             get { return r_NumOfCols; }
         }
 
-        private struct Cube
+        public struct Cube
         {
             private readonly int r_SymbolOfIcon;
             private bool v_IsHidden;
@@ -38,7 +44,7 @@ namespace MemoryLogic
                 v_IsHidden = i_IsHidden;
             }
 
-            public bool IsHidden
+            internal bool IsHidden
             {
                 get { return v_IsHidden; }
                 set { IsHidden = value; }
@@ -64,32 +70,32 @@ namespace MemoryLogic
                 }
             }
 
-            public void ExposeCube()
+            internal void ExposeCube()
             {
                 v_IsHidden = false;
             }
 
-            public void HideCube()
+            internal void HideCube()
             {
                 v_IsHidden = true;
             }
         }
 
-        public int ExposeSymbolAndTakeValue(Coordinate i_MoveCoordinate)
+        public int ExposeSymbolAndTakeValue(Point i_MovePoint)
         {
-            m_Board[i_MoveCoordinate.Row, i_MoveCoordinate.Col].ExposeCube();
+            m_Board[i_MovePoint.X, i_MovePoint.Y].ExposeCube();
 
-            return m_Board[i_MoveCoordinate.Row, i_MoveCoordinate.Col].SymbolOfIcon;
+            return m_Board[i_MovePoint.X, i_MovePoint.Y].SymbolOfIcon;
         }
 
-        public int GetIconInCoordinate(Coordinate i_MoveCoordinate)
+        public int GetIconInPoint(Point i_MovePoint)
         {
-            return m_Board[i_MoveCoordinate.Row, i_MoveCoordinate.Col].SymbolOfIcon;
+            return m_Board[i_MovePoint.X, i_MovePoint.Y].SymbolOfIcon;
         }
 
-        public void HideIcon(Coordinate i_MoveCoordinate)
+        public void HideIcon(Point i_MovePoint)
         {
-            m_Board[i_MoveCoordinate.Row, i_MoveCoordinate.Col].HideCube();
+            m_Board[i_MovePoint.Y, i_MovePoint.X].HideCube();
         }
 
         public bool checkIfGamehasFinished()
@@ -109,9 +115,9 @@ namespace MemoryLogic
             return v_GameOver;
         }
 
-        public bool CheckIfAlreadyExposed(Coordinate i_CurrMoveCoordinate)
+        public bool CheckIfAlreadyExposed(Point i_CurrMovePoint)
         {
-            return m_Board[i_CurrMoveCoordinate.Row, i_CurrMoveCoordinate.Col].IsHidden == false;
+            return m_Board[i_CurrMovePoint.X, i_CurrMovePoint.Y].IsHidden == false;
         }
 
         // make a mix of int according to the size of the board and divide them randomaly between the cubes

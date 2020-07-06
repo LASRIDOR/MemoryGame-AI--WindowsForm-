@@ -33,11 +33,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CheckInput.cs" />
-    <Compile Include="Coordinate.cs" />
     <Compile Include="GameBoard.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="SystemManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

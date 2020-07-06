@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace MemoryLogic
 {
@@ -63,17 +64,17 @@ namespace MemoryLogic
                 ThreeMove = 3
             }
 
-            private Dictionary<int, Coordinate> m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch;
+            private Dictionary<int, Point> m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch;
             private int m_PairsOnTable;
             private int m_NumOfRows;
             private int m_NumOfCols;
             private ePlayingStrategy m_MyNextKindMove;
-            private List<Coordinate> m_ListCoordinateForSureWinsMove;
-            private List<Coordinate> m_ListCoordinateExposedCard;
+            private List<Point> m_ListPointForSureWinsMove;
+            private List<Point> m_ListPointExposedCard;
 
-            public Coordinate MakingFirstMove()
+            public Point MakingFirstMove()
             {
-                Coordinate firstMove;
+                Point firstMove;
 
                 if (m_MyNextKindMove == ePlayingStrategy.TwoMove || m_MyNextKindMove == ePlayingStrategy.OneMove)
                 {
@@ -85,16 +86,16 @@ namespace MemoryLogic
                 }
                 else
                 {
-                    firstMove = m_ListCoordinateForSureWinsMove[0];
-                    m_ListCoordinateForSureWinsMove.RemoveAt(0);
+                    firstMove = m_ListPointForSureWinsMove[0];
+                    m_ListPointForSureWinsMove.RemoveAt(0);
                 }
 
                 return firstMove;
             }
 
-            public Coordinate MakingSecondMove(int i_SymbolOfFirstMoveCardRevealed)
+            public Point MakingSecondMove(int i_SymbolOfFirstMoveCardRevealed)
             {
-                Coordinate secondMove;
+                Point secondMove;
 
                 if (m_MyNextKindMove == ePlayingStrategy.TwoMove || m_MyNextKindMove == ePlayingStrategy.OneMove)
                 {
@@ -121,8 +122,8 @@ namespace MemoryLogic
                 }
                 else
                 {
-                    secondMove = m_ListCoordinateForSureWinsMove[0];
-                    m_ListCoordinateForSureWinsMove.RemoveAt(0);
+                    secondMove = m_ListPointForSureWinsMove[0];
+                    m_ListPointForSureWinsMove.RemoveAt(0);
                 }
 
                 return secondMove;
@@ -132,22 +133,22 @@ namespace MemoryLogic
             // and make i randomaly chose them from the dictionary of knowing card
             // and always make sure that they havent exposed yet
             // (No need for checking because ui will ask me again in case of exposing card but just to make sure)
-            private Coordinate getCardForCurrMoveOnKnowingDemand(bool i_NeedKnownCard)
+            private Point getCardForCurrMoveOnKnowingDemand(bool i_NeedKnownCard)
             {
-                Coordinate move;
+                Point move;
                 bool v_FoundMove = false;
                 Random rand = new Random();
 
                 do
                 {
-                    int randRowCoordinate = rand.Next(0, m_NumOfRows);
-                    int randColCoordinate = rand.Next(0, m_NumOfCols);
+                    int randRowPoint = rand.Next(0, m_NumOfRows);
+                    int randColPoint = rand.Next(0, m_NumOfCols);
 
-                    move = new Coordinate(UI.sr_ColSymbol[randColCoordinate].ToString() + UI.sr_RowSymbol[randRowCoordinate].ToString());
+                    move = new Point(UI.sr_ColSymbol[randColPoint].ToString() + UI.sr_RowSymbol[randRowPoint].ToString());
 
                     if (m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.ContainsValue(move) == i_NeedKnownCard)
                     {
-                        if (m_ListCoordinateExposedCard.Contains(move) == false)
+                        if (m_ListPointExposedCard.Contains(move) == false)
                         {
                             v_FoundMove = true;
                         }
@@ -159,58 +160,58 @@ namespace MemoryLogic
             }
 
             // get last play from ui and in case of match play add And Remove If Exist from Sure win list And Dictionary
-            // in case of match from dictionary of knowing card (differend cards of coordinate) this program will add them to sure win list
+            // in case of match from dictionary of knowing card (differend cards of Point) this program will add them to sure win list
             // if this is a new reveal of card i will add this to dictionary of knowing card and calculate next move (Math of game theory)
-            public void SetCardRevealedFromLastMove(Coordinate i_FirstMoveCoordinate, int i_FirstMoveSymbol, Coordinate i_SecondMoveCoordinate, int i_SecondMoveSymbol)
+            public void SetCardRevealedFromLastMove(Point i_FirstMovePoint, int i_FirstMoveSymbol, Point i_SecondMovePoint, int i_SecondMoveSymbol)
             {
                 if (i_FirstMoveSymbol == i_SecondMoveSymbol)
                 {
-                    addAndRemoveIfExistMatchCard(i_FirstMoveCoordinate, i_SecondMoveCoordinate, i_FirstMoveSymbol);
+                    addAndRemoveIfExistMatchCard(i_FirstMovePoint, i_SecondMovePoint, i_FirstMoveSymbol);
                     calculateNextMove();
                 }
                 else
                 {
                     if (m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.ContainsKey(i_FirstMoveSymbol) == true)
                     {
-                        if (m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.ContainsValue(i_FirstMoveCoordinate) == false)
+                        if (m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.ContainsValue(i_FirstMovePoint) == false)
                         {
-                            addToSureWinListKnownCard(i_FirstMoveSymbol, i_FirstMoveCoordinate);
+                            addToSureWinListKnownCard(i_FirstMoveSymbol, i_FirstMovePoint);
                         }
                     }
                     else
                     {
-                        m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.Add(i_FirstMoveSymbol, i_FirstMoveCoordinate);
+                        m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.Add(i_FirstMoveSymbol, i_FirstMovePoint);
                         calculateNextMove();
                     }
 
                     if (m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.ContainsKey(i_SecondMoveSymbol) == true)
                     {
-                        if (m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.ContainsValue(i_SecondMoveCoordinate) == false)
+                        if (m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.ContainsValue(i_SecondMovePoint) == false)
                         {
-                            addToSureWinListKnownCard(i_SecondMoveSymbol, i_SecondMoveCoordinate);
+                            addToSureWinListKnownCard(i_SecondMoveSymbol, i_SecondMovePoint);
                         }
                     }
                     else
                     {
-                        m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.Add(i_SecondMoveSymbol, i_SecondMoveCoordinate);
+                        m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.Add(i_SecondMoveSymbol, i_SecondMovePoint);
                         calculateNextMove();
                     }
                 }
             }
 
-            private void addAndRemoveIfExistMatchCard(Coordinate i_FirstMoveCoordinate, Coordinate i_SecondMoveCoordinate, int i_SymbolOfMoves)
+            private void addAndRemoveIfExistMatchCard(Point i_FirstMovePoint, Point i_SecondMovePoint, int i_SymbolOfMoves)
             {
-                m_ListCoordinateExposedCard.Add(i_FirstMoveCoordinate);
-                m_ListCoordinateExposedCard.Add(i_SecondMoveCoordinate);
-                m_ListCoordinateForSureWinsMove.Remove(i_FirstMoveCoordinate);
-                m_ListCoordinateForSureWinsMove.Remove(i_SecondMoveCoordinate);
+                m_ListPointExposedCard.Add(i_FirstMovePoint);
+                m_ListPointExposedCard.Add(i_SecondMovePoint);
+                m_ListPointForSureWinsMove.Remove(i_FirstMovePoint);
+                m_ListPointForSureWinsMove.Remove(i_SecondMovePoint);
                 m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.Remove(i_SymbolOfMoves);
             }
 
-            private void addToSureWinListKnownCard(int i_MoveSymbol, Coordinate i_MoveCoordinate)
+            private void addToSureWinListKnownCard(int i_MoveSymbol, Point i_MovePoint)
             {
-                m_ListCoordinateForSureWinsMove.Add(m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch[i_MoveSymbol]);
-                m_ListCoordinateForSureWinsMove.Add(i_MoveCoordinate);
+                m_ListPointForSureWinsMove.Add(m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch[i_MoveSymbol]);
+                m_ListPointForSureWinsMove.Add(i_MovePoint);
                 m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.Remove(i_MoveSymbol);
                 m_MyNextKindMove = ePlayingStrategy.ThreeMove;
             }
@@ -218,7 +219,7 @@ namespace MemoryLogic
             // Math of game theory for next move for matching game
             private void calculateNextMove()
             {
-                if (m_ListCoordinateForSureWinsMove.Count > 0)
+                if (m_ListPointForSureWinsMove.Count > 0)
                 {
                     m_MyNextKindMove = ePlayingStrategy.ThreeMove;
                 }
@@ -250,9 +251,9 @@ namespace MemoryLogic
 
             public void ResetMermory(int i_NumOfRow, int i_NumOfCol)
             {
-                m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch = new Dictionary<int, Coordinate>(i_NumOfRow * i_NumOfCol);
-                m_ListCoordinateForSureWinsMove = new List<Coordinate>(i_NumOfRow * i_NumOfCol);
-                m_ListCoordinateExposedCard = new List<Coordinate>(i_NumOfRow * i_NumOfCol);
+                m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch = new Dictionary<int, Point>(i_NumOfRow * i_NumOfCol);
+                m_ListPointForSureWinsMove = new List<Point>(i_NumOfRow * i_NumOfCol);
+                m_ListPointExposedCard = new List<Point>(i_NumOfRow * i_NumOfCol);
                 m_PairsOnTable = i_NumOfRow * i_NumOfCol;
                 m_MyNextKindMove = ePlayingStrategy.TwoMove;
                 m_NumOfRows = i_NumOfRow;
