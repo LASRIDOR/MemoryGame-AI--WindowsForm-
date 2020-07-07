@@ -19,7 +19,7 @@ namespace MemoryLogic
         {
             if (isAi == true)
             {
-                r_NameOfPlayer = "Computer";
+                r_NameOfPlayer = "-computer-";
                 r_AiBrain = new Ai();
             }
             else
@@ -144,7 +144,7 @@ namespace MemoryLogic
                     int randRowPoint = rand.Next(0, m_NumOfRows);
                     int randColPoint = rand.Next(0, m_NumOfCols);
 
-                    move = new Point(UI.sr_ColSymbol[randColPoint].ToString() + UI.sr_RowSymbol[randRowPoint].ToString());
+                    move = new Point(randColPoint, randRowPoint);
 
                     if (m_DictionaryMemoryOfUnrevealedKnownCardWithoutMatch.ContainsValue(move) == i_NeedKnownCard)
                     {
@@ -261,7 +261,7 @@ namespace MemoryLogic
             }
         }
 
-        public void NewGame(int? i_NumOfRow, int? i_NumOfCol)
+        public void ResetGame(int? i_NumOfRow, int? i_NumOfCol)
         {
             if (r_AiBrain != null)
             {

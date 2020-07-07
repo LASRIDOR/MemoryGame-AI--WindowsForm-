@@ -15,7 +15,6 @@ namespace MemoryLogic
             r_NumOfCols = i_Cols;
             r_NumOfRows = i_Rows;
             m_Board = new Cube[r_NumOfRows, r_NumOfCols];
-            boardPreparartion();
         }
 
         public Cube[,] Board
@@ -83,14 +82,14 @@ namespace MemoryLogic
 
         public int ExposeSymbolAndTakeValue(Point i_MovePoint)
         {
-            m_Board[i_MovePoint.X, i_MovePoint.Y].ExposeCube();
+            m_Board[i_MovePoint.Y, i_MovePoint.X].ExposeCube();
 
-            return m_Board[i_MovePoint.X, i_MovePoint.Y].SymbolOfIcon;
+            return m_Board[i_MovePoint.Y, i_MovePoint.X].SymbolOfIcon;
         }
 
         public int GetIconInPoint(Point i_MovePoint)
         {
-            return m_Board[i_MovePoint.X, i_MovePoint.Y].SymbolOfIcon;
+            return m_Board[i_MovePoint.Y, i_MovePoint.X].SymbolOfIcon;
         }
 
         public void HideIcon(Point i_MovePoint)
@@ -117,7 +116,17 @@ namespace MemoryLogic
 
         public bool CheckIfAlreadyExposed(Point i_CurrMovePoint)
         {
-            return m_Board[i_CurrMovePoint.X, i_CurrMovePoint.Y].IsHidden == false;
+            return (m_Board[i_CurrMovePoint.Y, i_CurrMovePoint.X].IsHidden == false);
+        }
+
+        public void HideAllCardAndMixCardAgain()
+        {
+            foreach (Cube cube in m_Board)
+            {
+                cube.HideCube();
+            }
+
+            boardPreparartion();
         }
 
         // make a mix of int according to the size of the board and divide them randomaly between the cubes

@@ -45,14 +45,12 @@
             resources.ApplyResources(this.SecondPlayerNameTextBox, "SecondPlayerNameTextBox");
             this.SecondPlayerNameTextBox.Name = "SecondPlayerNameTextBox";
             this.SecondPlayerNameTextBox.UseWaitCursor = true;
-            this.SecondPlayerNameTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // FirstPlayerNameLabel
             // 
             resources.ApplyResources(this.FirstPlayerNameLabel, "FirstPlayerNameLabel");
             this.FirstPlayerNameLabel.ForeColor = System.Drawing.Color.Black;
             this.FirstPlayerNameLabel.Name = "FirstPlayerNameLabel";
-            this.FirstPlayerNameLabel.Click += new System.EventHandler(this.label1_Click);
             // 
             // SecondPlayerNameLabel
             // 
@@ -64,7 +62,6 @@
             // 
             resources.ApplyResources(this.FirstPlayerNameTextBox, "FirstPlayerNameTextBox");
             this.FirstPlayerNameTextBox.Name = "FirstPlayerNameTextBox";
-            this.FirstPlayerNameTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged_1);
             // 
             // StartButtom
             // 
@@ -85,7 +82,6 @@
             // 
             resources.ApplyResources(this.BoardSizeLabel, "BoardSizeLabel");
             this.BoardSizeLabel.Name = "BoardSizeLabel";
-            this.BoardSizeLabel.Click += new System.EventHandler(this.label1_Click_1);
             // 
             // BoardSizeButtom
             // 
@@ -95,7 +91,7 @@
             this.BoardSizeButtom.UseVisualStyleBackColor = false;
             this.BoardSizeButtom.Click += new System.EventHandler(this.BoardSizeButtom_Click);
             // 
-            // LoginForm
+            // FormLogin
             // 
             this.AcceptButton = this.StartButtom;
             this.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
@@ -111,12 +107,15 @@
             this.Controls.Add(this.FirstPlayerNameLabel);
             this.Controls.Add(this.SecondPlayerNameTextBox);
             this.ForeColor = System.Drawing.Color.Black;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "LoginForm";
+            this.Name = "FormLogin";
             this.ShowIcon = false;
             this.Tag = "";
-            this.Load += new System.EventHandler(this.WindowsFormUI_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormLogin_FormClosing);
+            this.Load += new System.EventHandler(this.FormLogin_Load);
+            this.Enter += new System.EventHandler(this.BoardSizeButtom_Click);
             this.ResumeLayout(false);
             this.PerformLayout();
 

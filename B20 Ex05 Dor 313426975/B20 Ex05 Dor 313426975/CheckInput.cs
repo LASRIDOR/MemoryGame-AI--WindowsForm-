@@ -74,7 +74,7 @@
 
             return v_isValidBoardSize;
         }
-
+        /*
         public static bool IsValidMove(string i_Move, int i_NumOfRows, int i_NumOfCols)
         {
             bool v_IsSize = i_Move.Length == 2;
@@ -109,7 +109,7 @@
 
             return v_IsSize && v_FirstLetterIsvalid && v_SecondLetterIsvalid && v_InRange;
         }
-
+        */
         public static bool IssueErrorMessageExposedCube(bool io_AlreadyExposed)
         {
             if (io_AlreadyExposed == true)

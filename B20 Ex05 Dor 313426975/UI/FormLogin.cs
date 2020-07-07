@@ -11,79 +11,81 @@ namespace UI
 {
     public partial class FormLogin : Form
     {
+        private SystemManager m_ManagerPreperation;
+
+        public SystemManager ManagerPreperation
+        {
+            get { return m_ManagerPreperation; }
+        }
+
         public FormLogin()
         {
             InitializeComponent();
         }
 
-        private void WindowsFormUI_Load(object sender, EventArgs e)
+        private void FormLogin_FormClosing(object sender, FormClosingEventArgs e)
         {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            if (SecondPlayerNameTextBox.Enabled == true)
+            if (DialogResult == DialogResult.OK)
             {
-                SecondPlayerNameTextBox.Text = string.Empty;
+                return;
             }
             else
             {
-                SecondPlayerNameTextBox.Text = "-computer-";
+                gamePreperationWDetails();
             }
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-
         }
 
         private void AgainstFriend_click(object sender, EventArgs e)
         {
             if (SecondPlayerNameTextBox.Enabled == false)
             {
-                this.AgainstAFriendButtom.Text = "Against a Friend";
+                this.AgainstAFriendButtom.Text = "Against a Computer";
                 this.SecondPlayerNameTextBox.Enabled = true;
+                SecondPlayerNameTextBox.Text = string.Empty;
             }
             else
             {
-                this.AgainstAFriendButtom.Text = "Against a Computer";
+                this.AgainstAFriendButtom.Text = "Against a Friend";
                 this.SecondPlayerNameTextBox.Enabled = false;
+                SecondPlayerNameTextBox.Text = "-computer-";
             }
         }
 
         private void BoardSizeButtom_Click(object sender, EventArgs e)
         {
-            if (BoardSizeButtom.Text[2] == '6')
+            char pRow = BoardSizeButtom.Text[0];
+            char pCol = BoardSizeButtom.Text[2];
+
+            if (pCol == '6')
             {
-                if (BoardSizeButtom.Text[0] == '6')
+                if (pRow == '6')
                 {
                     BoardSizeButtom.Text = "4x4";
                 }
                 else
                 {
-                    BoardSizeButtom.Text = string.Format("{0}x{1}", BoardSizeButtom.Text[0]+1, BoardSizeButtom.Text[2]);
+                    BoardSizeButtom.Text = string.Format("{0}x{1}", ++pRow, '4');
                 }
             }
             else
             {
-                BoardSizeButtom.Text = string.Format("{0}x{1}", BoardSizeButtom.Text[0], BoardSizeButtom.Text[2] + 1);
+                if(pRow == '5' && pCol+1 == '5')
+                {
+                    ++pCol;
+                }
+
+                BoardSizeButtom.Text = string.Format("{0}x{1}", BoardSizeButtom.Text[0], ++pCol);
             }
         }
 
         private void StartButtom_Click(object sender, EventArgs e)
         {
-            if (this.FirstPlayerNameTextBox == null)
+            gamePreperationWDetails();
+        }
+
+        private void gamePreperationWDetails()
+        {
+            if (this.FirstPlayerNameTextBox.Text == string.Empty)
             {
                 MessageBox.Show("Please add a name for First Player");
             }
@@ -93,29 +95,34 @@ namespace UI
             }
             else
             {
-                //set game
+                m_ManagerPreperation = SetGame();
+                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
         }
 
-        public MemoryLogic.SystemManager SetGame()
+        public SystemManager SetGame()
         {
-            MemoryLogic.SystemManager gameManager = new SystemManager();
-            bool IsPlayerTwoAi = !(this.SecondPlayerNameLabel.Enabled);
+            bool v_IsPlayerTwoAi = !(this.SecondPlayerNameLabel.Enabled == false);
 
-            gameManager.PlayerOne = new Player(this.FirstPlayerNameTextBox.Text, false);
+            Player playerOne = new Player(this.FirstPlayerNameTextBox.Text, false);
+            Player playerTwo;
 
-            if (IsPlayerTwoAi == true)
+            if (v_IsPlayerTwoAi == true)
             {
-                gameManager.PlayerTwo = new Player(null, true);
+                playerTwo = new Player(null, true);
             }
             else
             {
-                gameManager.PlayerTwo = new Player(this.SecondPlayerNameTextBox.Text, false);
+                playerTwo = new Player(this.SecondPlayerNameTextBox.Text, false);
             }
 
-            gameManager.Board = new GameBoard(this.BoardSizeButtom.Text[0] - '0', this.BoardSizeButtom.Text[2] - '0');
+            return new SystemManager(playerOne, playerTwo, this.BoardSizeButtom.Text[0] - '0', this.BoardSizeButtom.Text[2] - '0');
+        }
 
-            return gameManager;
+        private void FormLogin_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

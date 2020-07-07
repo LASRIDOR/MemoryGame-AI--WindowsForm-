@@ -123,14 +123,14 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="SecondPlayerNameTextBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>378, 103</value>
+    <value>380, 103</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="SecondPlayerNameTextBox.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>No</value>
   </data>
   <data name="SecondPlayerNameTextBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 44</value>
+    <value>260, 44</value>
   </data>
   <data name="SecondPlayerNameTextBox.TabIndex" type="System.Int32, mscorlib">
     <value>100</value>
@@ -208,13 +208,13 @@
     <value>5</value>
   </data>
   <data name="FirstPlayerNameTextBox.Location" type="System.Drawing.Point, System.Drawing">
-    <value>378, 41</value>
+    <value>380, 41</value>
   </data>
   <data name="FirstPlayerNameTextBox.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>No</value>
   </data>
   <data name="FirstPlayerNameTextBox.Size" type="System.Drawing.Size, System.Drawing">
-    <value>300, 44</value>
+    <value>260, 44</value>
   </data>
   <data name="FirstPlayerNameTextBox.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -235,7 +235,7 @@
     <value>NoControl</value>
   </data>
   <data name="StartButtom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>795, 390</value>
+    <value>842, 453</value>
   </data>
   <data name="StartButtom.Size" type="System.Drawing.Size, System.Drawing">
     <value>203, 59</value>
@@ -259,10 +259,10 @@
     <value>3</value>
   </data>
   <data name="AgainstAFriendButtom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>720, 106</value>
+    <value>660, 94</value>
   </data>
   <data name="AgainstAFriendButtom.Size" type="System.Drawing.Size, System.Drawing">
-    <value>278, 41</value>
+    <value>385, 60</value>
   </data>
   <data name="AgainstAFriendButtom.TabIndex" type="System.Int32, mscorlib">
     <value>200</value>
@@ -286,7 +286,7 @@
     <value>True</value>
   </data>
   <data name="BoardSizeLabel.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 173</value>
+    <value>27, 241</value>
   </data>
   <data name="BoardSizeLabel.Size" type="System.Drawing.Size, System.Drawing">
     <value>182, 37</value>
@@ -310,7 +310,7 @@
     <value>1</value>
   </data>
   <data name="BoardSizeButtom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>27, 237</value>
+    <value>27, 300</value>
   </data>
   <data name="BoardSizeButtom.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>No</value>
@@ -343,7 +343,7 @@
     <value>19, 37</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1018, 460</value>
+    <value>1072, 524</value>
   </data>
   <data name="$this.RightToLeft" type="System.Windows.Forms.RightToLeft, System.Windows.Forms">
     <value>No</value>
@@ -355,7 +355,7 @@
     <value>Memory Game - Settings</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
-    <value>LoginForm</value>
+    <value>FormLogin</value>
   </data>
   <data name="&gt;&gt;$this.Type" xml:space="preserve">
     <value>System.Windows.Forms.Form, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>

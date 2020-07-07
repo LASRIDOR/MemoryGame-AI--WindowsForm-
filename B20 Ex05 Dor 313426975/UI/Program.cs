@@ -1,14 +1,18 @@
-﻿namespace MemoryLogic
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace UI
 {
     public class Program
     {
+        [STAThread]
         public static void Main()
         {
-            SystemManager gameTime = new SystemManager();
+            SystemManager manager = UI.LoginAndSetGame();
 
-            gameTime.PlayMatchGame();
+            manager.PlayMatchGame();
 
-            // wait for enter
             System.Console.WriteLine("Please press 'Enter' to exit...");
             System.Console.ReadLine();
         }

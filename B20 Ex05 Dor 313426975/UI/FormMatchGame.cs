@@ -9,101 +9,122 @@ using MemoryLogic;
 
 namespace UI
 {
-    public partial class FormGame : Form
+    public partial class FormMatchGame : Form
     {
-        private Label playerTwo = new Label();
-        private Label playerOne = new Label();
         private Button[,] buttonBoard;
         private readonly int r_NumOfRows;
         private readonly int r_NumOfCols;
         private Point m_LastMove;
         private static readonly List<char> sr_IconSymbolStorage = makeRandSymbolListOfIconAccordingToSizeOfBoard();
+        private readonly Dictionary<int, Point> sr_LocationToPoint;
 
         public Point LastMove
         {
             get { return m_LastMove; }
         }
 
-        public FormGame(string i_NameOfPlayerOne, string i_NameOfPlayerTwo, int i_Row, int i_Col)
+        public FormMatchGame(string i_NameOfPlayerOne, string i_NameOfPlayerTwo, int i_Row, int i_Col)
         {
-            playerOne.Text = i_NameOfPlayerOne + ": 0 Pairs";
-            playerTwo.Text = i_NameOfPlayerTwo + ": 0 Pairs";
-            buttonBoard = new Button[i_Row,i_Col];
-            ClientSize = new Size((i_Row * i_Col) + 100, (i_Row * i_Col) + 150);
             r_NumOfRows = i_Row;
             r_NumOfCols = i_Col;
-            InitializeComponent();
+            sr_LocationToPoint = new Dictionary<int, Point>(i_Row * i_Col);
+            InitializeComponent(i_NameOfPlayerOne, i_NameOfPlayerTwo, i_Row, i_Col);
         }
 
-        //protected override void OnShown(EventArgs e)
-        //{
-        //    base.OnShown(e);
-        //}
+        #region Windows Form Designer generated code
 
-        private void InitializeComponent()
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent(string i_NameOfPlayerOne, string i_NameOfPlayerTwo, int i_Row, int i_Col)
         {
+            this.LabelCurrentPlayer = new System.Windows.Forms.Label();
+            this.LabelFirstName = new System.Windows.Forms.Label();
+            this.LabelSecondPlayer = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            playerOne.AutoSize = true;
-            playerOne.Top = 12;
-            playerOne.Left = 12;
-            playerOne.Name = "playerOne";
-            playerTwo.AutoSize = true;
-            playerTwo.Top = 12;
-            playerTwo.Left = ClientSize.Width;
-            playerTwo.Name = "playerTwo";
-            Controls.Add(this.playerOne);
-            Controls.Add(this.playerTwo);
-            AutoSize = true;
-            int xStartValue = playerOne.Left;
-            int yStartValue = playerOne.Height + 12;
+            string zeroPairs = ": 0 Pairs";
+            //
+            // LabelCurrentPlayer
+            //
+            this.LabelCurrentPlayer.AutoSize = true;
+            this.LabelCurrentPlayer.BackColor = System.Drawing.Color.MediumSpringGreen;
+            this.LabelCurrentPlayer.Location = new System.Drawing.Point(10, i_Row * 165 +12);
+            this.LabelCurrentPlayer.Name = "LabelCurrentPlayer";
+            this.LabelCurrentPlayer.Size = new System.Drawing.Size(100, 37);
+            this.LabelCurrentPlayer.TabIndex = 0;
+            LabelCurrentPlayer.Text = string.Format("Current Player: {0}", i_NameOfPlayerOne);
+            this.LabelCurrentPlayer.Click += new System.EventHandler(this.label1_Click);
+            //
+            // LabelFirstName
+            //
+            this.LabelFirstName.AutoSize = true;
+            this.LabelFirstName.BackColor = System.Drawing.Color.MediumSpringGreen;
+            this.LabelFirstName.Location = new System.Drawing.Point(10, LabelCurrentPlayer.Location.Y + 60);
+            this.LabelFirstName.Name = "LabelFirstName";
+            this.LabelFirstName.Size = new System.Drawing.Size(102, 37);
+            this.LabelFirstName.TabIndex = 1;
+            LabelFirstName.Text = string.Format("{0} {1}", i_NameOfPlayerOne, zeroPairs);
+            this.LabelFirstName.Click += new System.EventHandler(this.LaberFirstName_Click);
+            //
+            // LabelSecondPlayer
+            //
+            this.LabelSecondPlayer.AutoSize = true;
+            this.LabelSecondPlayer.BackColor = System.Drawing.Color.Orchid;
+            this.LabelSecondPlayer.ForeColor = System.Drawing.Color.Black;
+            this.LabelSecondPlayer.Location = new System.Drawing.Point(10, LabelFirstName.Location.Y + 60);
+            this.LabelSecondPlayer.Name = "LabelSecondPlayer";
+            this.LabelSecondPlayer.Size = new System.Drawing.Size(100, 37);
+            this.LabelSecondPlayer.TabIndex = 2;
+            LabelSecondPlayer.Text = string.Format("{0} {1}", i_NameOfPlayerTwo, zeroPairs);
+            //
+            // Table of Board Of Buttom
+            //
+            buttonBoard = new Button[i_Row, i_Col];
+            int xStartValue = LabelCurrentPlayer.Left;
+            int yStartValue = LabelCurrentPlayer.Height - 12;
             int xCurrentValue;
             int yCurrentValue;
-            
+            int tabIndex = 0;
+
             for (int row = 0; row < r_NumOfRows; row++)
             {
                 for (int col = 0; col < r_NumOfCols; col++)
                 {
                     buttonBoard[row, col] = new Button();
-                    buttonBoard[row, col].Size = new Size(80, 80);
-                    xCurrentValue = xStartValue + (col * 80);
-                    yCurrentValue = yStartValue + (row * 80);
+                    buttonBoard[row, col].Size = new Size(150, 150);
+                    xCurrentValue = xStartValue + (col * 160);
+                    yCurrentValue = yStartValue + (row * 160);
                     buttonBoard[row, col].Location = new Point(xCurrentValue, yCurrentValue);
                     buttonBoard[row, col].BackColor = Color.DarkGray;
                     buttonBoard[row, col].Enabled = true;
-
                     this.Controls.Add(buttonBoard[row, col]);
                     buttonBoard[row, col].Click += new EventHandler(buttonBoard_Click);
+                    buttonBoard[row, col].TabIndex = tabIndex++;
+                    sr_LocationToPoint.Add(buttonBoard[row, col].TabIndex, new Point(col, row));
                 }
             }
-            
-            ResumeLayout(false);
-            PerformLayout();
             //
-            // FormGame
+            // FormMatchGame
             //
+            //this.MaximizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.StartPosition = FormStartPosition.CenterScreen;
             this.AutoScaleDimensions = new System.Drawing.SizeF(19F, 37F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1991, 1185);
-            this.MaximizeBox = false;
-            this.Name = "FormGame";
+            ClientSize = new Size((i_Col) * 162, (i_Row+2) * 165);
+            this.Controls.Add(this.LabelSecondPlayer);
+            this.Controls.Add(this.LabelFirstName);
+            this.Controls.Add(this.LabelCurrentPlayer);
+            this.Name = "FormMatchGame";
             this.Text = "Memory Game";
-            this.Load += new System.EventHandler(this.FormGame_Load);
+            this.Load += new System.EventHandler(this.FormMatchGame_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
-        //private void AiMoves()
-        //{
-        //    m_LogicManager.AITurn();
-        //    System.Threading.Thread.Sleep(2000);
-        //    showBoardFromLogic();
-        //    m_LogicManager.AITurn();
-        //    System.Threading.Thread.Sleep(2000);
-        //    showBoardFromLogic();
-        //    m_LogicManager.checkMatchLastMoveAndKeepGameRoutine();
-        //    KeepScore();
-        //    CheckGameOver();
-        //}
+        #endregion
 
         public void showBoardFromLogic(GameBoard.Cube[,] i_Cube) // think about give only point and change accordingly except than giving and changing all of it
         {
@@ -119,25 +140,12 @@ namespace UI
             }
         }
 
-        //private void CheckGameOver()
-        //{
-        //    if (m_LogicManager.checkGameOver() == true)
-        //    {
-        //
-        //    }
-        //}
-
         private void buttonBoard_Click(object sender, EventArgs e)
         {
             Button currentButtonToMove = sender as Button;
-            m_LastMove = currentButtonToMove.Location;
+            m_LastMove = sr_LocationToPoint[currentButtonToMove.TabIndex];
+            this.DialogResult = DialogResult.Cancel;
         }
-
-        //private void KeepScore()
-        //{
-        //    playerOne.Text = m_LogicManager.PlayerOne.NameOfPlayer + ": " + m_LogicManager.PlayerOne.Score;
-        //    playerTwo.Text = m_LogicManager.PlayerTwo.NameOfPlayer + ": " + m_LogicManager.PlayerTwo.Score;
-        //}
 
         public void WinnerAnnouncment(Player i_PlayerOne, Player i_PlayerTwo)
         {
@@ -145,7 +153,7 @@ namespace UI
             {
                 MessageBox.Show(string.Format("{0} Congratulations You Are The Winner", i_PlayerOne.NameOfPlayer));
             }
-            else if(i_PlayerOne.Score < i_PlayerTwo.Score)
+            else if (i_PlayerOne.Score < i_PlayerTwo.Score)
             {
                 MessageBox.Show(string.Format("{0} Congratulations You Are The Winner", i_PlayerTwo.NameOfPlayer));
             }
@@ -177,6 +185,11 @@ namespace UI
             }
 
             return v_AnotherGame;
+        }
+
+        public void switchCurrentPlayerTo(string i_NameOfPlayer)
+        {
+            this.LabelCurrentPlayer.Text = string.Format("Current Player: {0}", i_NameOfPlayer);
         }
 
         // this program chose randomaly symbol from ASCII table between '~' - '!' For the symbol for each card
@@ -225,37 +238,12 @@ namespace UI
 
         }
 
-        private void label2_Click(object sender, EventArgs e)
+        private void FormMatchGame_Load(object sender, EventArgs e)
         {
 
         }
 
-        private void Player2NameLabel_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void FormGame_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel1_Paint_1(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanelCards_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel1_Paint_2(object sender, PaintEventArgs e)
+        private void LaberFirstName_Click(object sender, EventArgs e)
         {
 
         }

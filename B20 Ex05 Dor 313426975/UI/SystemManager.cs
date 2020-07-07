@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
+using System.Text;
+using MemoryLogic;
 
-namespace MemoryLogic
+namespace UI
 {
     public class SystemManager
     {
+        private FormMatchGame m_FormGame;
         private Player m_PlayerOne;
         private Player m_PlayerTwo;
         private GameBoard m_GameBoard;
@@ -41,32 +43,141 @@ namespace MemoryLogic
             set { m_PlayerTwo = value; }
         }
 
-        public GameBoard GameBoard
+        public SystemManager(Player i_PlayerOne, Player i_PlayerTwo, int i_Row, int i_Col)
         {
-            get { return m_GameBoard; }
-            set { m_GameBoard = value; }
-        }
-
-        public eTurn PlayerTurn
-        {
-            get { return m_PlayerTurn; }
-            set { m_PlayerTurn = value; }
+            m_PlayerOne = i_PlayerOne;
+            m_PlayerTwo = i_PlayerTwo;
+            m_GameBoard = new GameBoard(i_Row, i_Col);
         }
 
         public void PlayMatchGame()
         {
-            bool v_WantToPlayAnotherGame;
+            bool v_WantToPlayAnotherGame = true;
 
-           // do
-           // {
-                m_PlayerOne.NewGame(null, null);
-                m_PlayerTwo.NewGame(m_Board.NumOfRows, m_Board.NumOfCols);
-                //m_Ui.printBoard(board);
-                gameRoutineAndKeepScore(m_Board);
-                //m_Ui.announceOnTheWinner(m_PlayerOne, m_PlayerTwo);
-                //v_WantToPlayAnotherGame = UI.askForAnotherGame(m_PlayerOne.NameOfPlayer, m_PlayerTwo.NameOfPlayer);
-         //   }
-           // while (v_WantToPlayAnotherGame == true);
+            do
+            {
+                MakeNewGame();
+                m_PlayerOne.ResetGame(null, null);
+                m_PlayerTwo.ResetGame(m_GameBoard.NumOfRows, m_GameBoard.NumOfCols);
+                m_PlayerTurn = eTurn.PlayerOne;
+                gameRoutineAndKeepScore();
+                m_FormGame.WinnerAnnouncment(m_PlayerOne, m_PlayerTwo);
+                v_WantToPlayAnotherGame = m_FormGame.AskForAnotherGame();
+                m_FormGame.Close();
+            }
+            while (v_WantToPlayAnotherGame == true);
+        }
+
+        private void MakeNewGame()
+        {
+            m_GameBoard.HideAllCardAndMixCardAgain();
+            m_FormGame = new FormMatchGame(m_PlayerOne.NameOfPlayer, m_PlayerTwo.NameOfPlayer, m_GameBoard.NumOfRows, m_GameBoard.NumOfCols);
+            m_FormGame.showBoardFromLogic(m_GameBoard.Board);
+        }
+
+        private void gameRoutineAndKeepScore()
+        {
+            while (m_GameBoard.checkIfGamehasFinished() == false)
+            {
+                playerMakeMoveHisTurn();
+                switchTurn();
+            }
+        }
+
+        private void playerMakeMoveHisTurn()
+        {
+            eMoveNum moveNum = eMoveNum.FirstMove;
+            m_FirstMovePoint = askPlayingPlayerForMoveCheckMoveAndMakeCoordinate();
+            m_FirstMoveSymbol = m_GameBoard.ExposeSymbolAndTakeValue(m_FirstMovePoint);
+
+            m_FormGame.showBoardFromLogic(m_GameBoard.Board);
+
+            moveNum = eMoveNum.SecondMove;
+            m_SecondMovePoint = askPlayingPlayerForMoveCheckMoveAndMakeCoordinate();
+            m_SecondMoveSymbol = m_GameBoard.ExposeSymbolAndTakeValue(m_SecondMovePoint);
+
+            m_FormGame.showBoardFromLogic(m_GameBoard.Board);
+
+            if (m_SecondMoveSymbol != m_FirstMoveSymbol)
+            {
+                System.Threading.Thread.Sleep(2000);
+                cancelLastPlayingPlayerPlay();
+            }
+            else
+            {
+                if (m_PlayerTurn == eTurn.PlayerOne)
+                {
+                    m_PlayerOne.GivePlayerOnePoint();
+                }
+                else
+                {
+                    m_PlayerTwo.GivePlayerOnePoint();
+                }
+            }
+
+            if (m_PlayerTwo.IsAi() == true)
+            {
+                m_PlayerTwo.AiBrain.SetCardRevealedFromLastMove(m_FirstMovePoint, m_FirstMoveSymbol, m_SecondMovePoint, m_SecondMoveSymbol);
+            }
+        }
+
+        private Point askPlayingPlayerForMoveCheckMoveAndMakeCoordinate()
+        {
+            Point moveCoordinate;
+            bool v_AlreadyExposed;
+
+            do
+            {
+                moveCoordinate = askPlayingPlayerForMoveAndMakeCoordinate();
+                v_AlreadyExposed = CheckIfPointisExposed(moveCoordinate);
+
+                if (v_AlreadyExposed == true)
+                {
+                    m_FormGame.AlreadyExposedMessage();
+                }
+            }
+            while (v_AlreadyExposed == true);
+
+            return moveCoordinate;
+        }
+
+        private Point askPlayingPlayerForMoveAndMakeCoordinate()
+        {
+            Point moveCoordinate;
+
+            if (m_PlayerTurn == eTurn.PlayerOne)
+            {
+                moveCoordinate = getMoveFromHumanPlayerAndMakeCoordinate();
+            }
+            else
+            {
+                if (m_PlayerTwo.IsAi() == true)
+                {
+                    if (m_MoveNum == eMoveNum.FirstMove)
+                    {
+                        moveCoordinate = m_PlayerTwo.AiBrain.MakingFirstMove();
+                    }
+                    else
+                    {
+                        moveCoordinate = m_PlayerTwo.AiBrain.MakingSecondMove(m_FirstMoveSymbol);
+                    }
+
+                    m_FormGame.showBoardFromLogic(m_GameBoard.Board);
+                    System.Threading.Thread.Sleep(2000);
+                }
+                else
+                {
+                    moveCoordinate = getMoveFromHumanPlayerAndMakeCoordinate();
+                }
+            }
+
+            return moveCoordinate;
+        }
+
+        private Point getMoveFromHumanPlayerAndMakeCoordinate()
+        {
+            m_FormGame.ShowDialog();
+            return m_FormGame.LastMove;
         }
         /*
         private void gameRoutineAndKeepScore(GameBoard io_Board)
@@ -121,7 +232,7 @@ namespace MemoryLogic
             switchTurn();
             m_MoveNum = eMoveNum.FirstMove;
         }
-
+        /*
         private void makeFirstMove()
         {
             Point firstMovePoint = askPlayingPlayerForMoveCheckMoveAndMakePoint(moveNum, null);
@@ -143,6 +254,7 @@ namespace MemoryLogic
 
             return movePoint;
         }
+        */
         /*
         private Point askPlayingPlayerForMoveAndMakePoint(eMoveNum io_MoveNum, int? i_SymbolOfFirstMoveCardRevealed)
         {
@@ -201,16 +313,13 @@ namespace MemoryLogic
             if (m_PlayerTurn == eTurn.PlayerOne)
             {
                 m_PlayerTurn = eTurn.PlayerTwo;
+                m_FormGame.switchCurrentPlayerTo(m_PlayerTwo.NameOfPlayer);
             }
             else
             {
                 m_PlayerTurn = eTurn.PlayerOne;
+                m_FormGame.switchCurrentPlayerTo(m_PlayerOne.NameOfPlayer);
             }
-        }
-
-        public bool checkGameOver()
-        {
-            m_GameBoard.checkIfGamehasFinished();
         }
     }
 }

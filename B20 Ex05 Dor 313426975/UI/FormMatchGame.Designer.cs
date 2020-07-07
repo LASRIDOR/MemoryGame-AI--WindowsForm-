@@ -1,11 +1,6 @@
-﻿using System;
-using System.Windows.Forms;
-using System.Drawing;
-using MemoryLogic;
-
-namespace UI
+﻿namespace UI
 {
-    partial class FormGame
+    partial class FormMatchGame
     {
         /// <summary>
         /// Required designer variable.
@@ -25,5 +20,8 @@ namespace UI
             base.Dispose(disposing);
         }
 
+        private System.Windows.Forms.Label LabelCurrentPlayer;
+        private System.Windows.Forms.Label LabelFirstName;
+        private System.Windows.Forms.Label LabelSecondPlayer;
     }
 }

@@ -5,19 +5,27 @@ using MemoryLogic;
 
 namespace UI
 {
-    internal class UI
+    public class UI
     {
-        internal void Run()
+        public static SystemManager LoginAndSetGame()
         {
-            FormLogin formLogin = new FormLogin();
-            if (formLogin.ShowDialog() == DialogResult.OK)
+            SystemManager resultManager = null;
+            bool v_dialogResult;
+
+            do
             {
-                FormGame formGame = new FormGame(formLogin.SetGame());
-                formGame.StartPosition = FormStartPosition.CenterScreen;
-                formGame.FormBorderStyle = FormBorderStyle.FixedDialog;
-                formGame.MaximizeBox = false;
-                formGame.ShowDialog();
-            }
+                FormLogin formLogin = new FormLogin();
+                formLogin.ShowDialog();
+                v_dialogResult = formLogin.DialogResult == DialogResult.OK;
+
+                if (v_dialogResult == true)
+                {
+                    resultManager = formLogin.ManagerPreperation;
+                }
+
+            } while (v_dialogResult == false);
+
+            return resultManager;
         }
     }
 }
