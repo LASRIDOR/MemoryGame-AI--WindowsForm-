@@ -36,11 +36,19 @@ namespace MemoryLogic
         {
             private readonly int r_SymbolOfIcon;
             private bool v_IsHidden;
+            private Color m_Color;
 
-            public Cube(int i_Icon, bool i_IsHidden)
+            public Cube(int i_Icon, bool i_IsHidden, Color i_Color)
             {
                 r_SymbolOfIcon = i_Icon;
                 v_IsHidden = i_IsHidden;
+                m_Color = i_Color;
+            }
+
+            public Color Color
+            {
+                set { m_Color = value; }
+                get { return m_Color; }
             }
 
             internal bool IsHidden
@@ -119,6 +127,12 @@ namespace MemoryLogic
             return (m_Board[i_CurrMovePoint.Y, i_CurrMovePoint.X].IsHidden == false);
         }
 
+        public void PaintCubeInColor(Point i_FirstMovePoint, Point i_SecondMovePoint, Color i_Color)
+        {
+            m_Board[i_FirstMovePoint.Y, i_FirstMovePoint.X].Color = i_Color;
+            m_Board[i_SecondMovePoint.Y, i_SecondMovePoint.X].Color = i_Color;
+        }
+
         public void HideAllCardAndMixCardAgain()
         {
             foreach (Cube cube in m_Board)
@@ -156,7 +170,7 @@ namespace MemoryLogic
                 {
                     // 0 saved to space symbol
                     int randomNumber = random.Next(0, io_ListOfIcon.Count);
-                    m_Board[i, j] = new Cube(io_ListOfIcon[randomNumber], true);
+                    m_Board[i, j] = new Cube(io_ListOfIcon[randomNumber], true, Color.DarkGray);
                     io_ListOfIcon.RemoveAt(randomNumber);
                 }
             }

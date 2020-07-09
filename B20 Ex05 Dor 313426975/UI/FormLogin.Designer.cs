@@ -66,6 +66,7 @@
             // StartButtom
             // 
             this.StartButtom.BackColor = System.Drawing.Color.Lime;
+            this.StartButtom.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             resources.ApplyResources(this.StartButtom, "StartButtom");
             this.StartButtom.Name = "StartButtom";
             this.StartButtom.UseVisualStyleBackColor = false;

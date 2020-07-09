@@ -9,13 +9,14 @@ namespace MemoryLogic
         private readonly string r_NameOfPlayer;
         private readonly Ai r_AiBrain;
         private int m_Score;
+        private readonly Color r_Color;
 
         public Ai AiBrain
         {
             get { return r_AiBrain; }
         }
 
-        public Player(string i_NameOfPlayer, bool isAi)
+        public Player(string i_NameOfPlayer, bool isAi, Color i_Color)
         {
             if (isAi == true)
             {
@@ -27,6 +28,13 @@ namespace MemoryLogic
                 r_NameOfPlayer = i_NameOfPlayer;
                 r_AiBrain = null;
             }
+
+            r_Color = i_Color;
+        }
+
+        public Color Color
+        {
+            get { return r_Color; }
         }
 
         public string NameOfPlayer

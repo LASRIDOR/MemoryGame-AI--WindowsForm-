@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows.Forms;
 using MemoryLogic;
@@ -17,6 +18,13 @@ namespace UI
         private Point m_LastMove;
         private static readonly List<char> sr_IconSymbolStorage = makeRandSymbolListOfIconAccordingToSizeOfBoard();
         private readonly Dictionary<int, Point> sr_LocationToPoint;
+        private bool v_WaitForPushButtom;
+
+        public bool WaitForPushButtom
+        {
+            set { v_WaitForPushButtom = value; }
+            get { return v_WaitForPushButtom; }
+        }
 
         public Point LastMove
         {
@@ -31,7 +39,7 @@ namespace UI
             InitializeComponent(i_NameOfPlayerOne, i_NameOfPlayerTwo, i_Row, i_Col);
         }
 
-        #region Windows Form Designer generated code
+       // #region Windows Form Designer generated code
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -49,7 +57,7 @@ namespace UI
             //
             this.LabelCurrentPlayer.AutoSize = true;
             this.LabelCurrentPlayer.BackColor = System.Drawing.Color.MediumSpringGreen;
-            this.LabelCurrentPlayer.Location = new System.Drawing.Point(10, i_Row * 165 +12);
+            this.LabelCurrentPlayer.Location = new System.Drawing.Point(10, i_Row * 165 + 12);
             this.LabelCurrentPlayer.Name = "LabelCurrentPlayer";
             this.LabelCurrentPlayer.Size = new System.Drawing.Size(100, 37);
             this.LabelCurrentPlayer.TabIndex = 0;
@@ -107,26 +115,31 @@ namespace UI
             //
             // FormMatchGame
             //
-            //this.MaximizeBox = false;
+            Button cancelButtom = new Button();
+            cancelButtom.Name = "CancelButtom";
+            cancelButtom.Click += new EventHandler(FormMatchGame_DieHard);
+            this.MaximizeBox = false;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.AutoScaleDimensions = new System.Drawing.SizeF(19F, 37F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new Size((i_Col) * 162, (i_Row+2) * 165);
+            ClientSize = new Size((i_Col) * 162, (i_Row + 2) * 165);
             this.Controls.Add(this.LabelSecondPlayer);
             this.Controls.Add(this.LabelFirstName);
             this.Controls.Add(this.LabelCurrentPlayer);
             this.Name = "FormMatchGame";
             this.Text = "Memory Game";
             this.Load += new System.EventHandler(this.FormMatchGame_Load);
+            this.Shown += new System.EventHandler(this.FormMatchGame_Shown);
+            this.CancelButton = cancelButtom;
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
-        #endregion
+        //#endregion
 
-        public void showBoardFromLogic(GameBoard.Cube[,] i_Cube) // think about give only point and change accordingly except than giving and changing all of it
+        public void showBoardFromLogic(GameBoard.Cube[,] i_Cube, Player io_PlayerOne, Player io_PlayerTwo) // think about give only point and change accordingly except than giving and changing all of it
         {
             for (int row = 0; row < r_NumOfRows; row++)
             {
@@ -135,10 +148,16 @@ namespace UI
                     if (buttonBoard[row, col].Enabled == true)
                     {
                         buttonBoard[row, col].Text = sr_IconSymbolStorage[i_Cube[row, col].SymbolOfIcon].ToString();
+                        buttonBoard[row, col].BackColor = i_Cube[row, col].Color;
                     }
                 }
             }
+
+            this.LabelFirstName.Text = string.Format("{0}: {1} Pairs", io_PlayerOne.NameOfPlayer, io_PlayerOne.Score);
+            this.LabelSecondPlayer.Text = string.Format("{0}: {1} Pairs", io_PlayerTwo.NameOfPlayer, io_PlayerTwo.Score);
         }
+
+
 
         private void buttonBoard_Click(object sender, EventArgs e)
         {
@@ -238,14 +257,36 @@ namespace UI
 
         }
 
+        private void FormMatchGame_DieHard(object sender, EventArgs e)
+        {
+            Environment.Exit(1);
+        }
+
         private void FormMatchGame_Load(object sender, EventArgs e)
         {
-
         }
 
         private void LaberFirstName_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void FormMatchGame_FormClosing(object sender, FormClosingEventArgs e)
+        {
+
+        }
+
+        private void FormMatchGame_Shown(object sender, EventArgs e)
+        {
+            if (v_WaitForPushButtom == false)
+            {
+                this.DialogResult = DialogResult.Cancel;
+                MessageBox.Show("Card Was Flipped Watch The Result Press OK After Evaluation");
+            }
+            else
+            {
+                this.DialogResult = DialogResult.None;
+            }
         }
     }
 }

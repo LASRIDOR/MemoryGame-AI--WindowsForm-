@@ -72,7 +72,7 @@ namespace UI
         {
             m_GameBoard.HideAllCardAndMixCardAgain();
             m_FormGame = new FormMatchGame(m_PlayerOne.NameOfPlayer, m_PlayerTwo.NameOfPlayer, m_GameBoard.NumOfRows, m_GameBoard.NumOfCols);
-            m_FormGame.showBoardFromLogic(m_GameBoard.Board);
+            m_FormGame.showBoardFromLogic(m_GameBoard.Board, PlayerOne, PlayerTwo);
         }
 
         private void gameRoutineAndKeepScore()
@@ -86,21 +86,28 @@ namespace UI
 
         private void playerMakeMoveHisTurn()
         {
-            eMoveNum moveNum = eMoveNum.FirstMove;
+            //m_FormGame.showBoardFromLogic(m_GameBoard.Board, PlayerOne, PlayerTwo);
+
+            m_MoveNum = eMoveNum.FirstMove;
             m_FirstMovePoint = askPlayingPlayerForMoveCheckMoveAndMakeCoordinate();
             m_FirstMoveSymbol = m_GameBoard.ExposeSymbolAndTakeValue(m_FirstMovePoint);
 
-            m_FormGame.showBoardFromLogic(m_GameBoard.Board);
+            m_FormGame.showBoardFromLogic(m_GameBoard.Board, PlayerOne, PlayerTwo);
+            m_FormGame.WaitForPushButtom = false;
+            m_FormGame.ShowDialog();
+            m_FormGame.WaitForPushButtom = true;
 
-            moveNum = eMoveNum.SecondMove;
+            m_MoveNum = eMoveNum.SecondMove;
             m_SecondMovePoint = askPlayingPlayerForMoveCheckMoveAndMakeCoordinate();
             m_SecondMoveSymbol = m_GameBoard.ExposeSymbolAndTakeValue(m_SecondMovePoint);
 
-            m_FormGame.showBoardFromLogic(m_GameBoard.Board);
+            m_FormGame.showBoardFromLogic(m_GameBoard.Board, PlayerOne, PlayerTwo);
+            m_FormGame.WaitForPushButtom = false;
+            m_FormGame.ShowDialog();
 
             if (m_SecondMoveSymbol != m_FirstMoveSymbol)
             {
-                System.Threading.Thread.Sleep(2000);
+                //System.Threading.Thread.Sleep(2000);
                 cancelLastPlayingPlayerPlay();
             }
             else
@@ -108,11 +115,14 @@ namespace UI
                 if (m_PlayerTurn == eTurn.PlayerOne)
                 {
                     m_PlayerOne.GivePlayerOnePoint();
+                    m_GameBoard.PaintCubeInColor(m_FirstMovePoint, m_SecondMovePoint, PlayerOne.Color);
                 }
                 else
                 {
                     m_PlayerTwo.GivePlayerOnePoint();
+                    m_GameBoard.PaintCubeInColor(m_FirstMovePoint, m_SecondMovePoint, m_PlayerTwo.Color);
                 }
+                m_FormGame.showBoardFromLogic(m_GameBoard.Board, PlayerOne, PlayerTwo);
             }
 
             if (m_PlayerTwo.IsAi() == true)
@@ -147,12 +157,14 @@ namespace UI
 
             if (m_PlayerTurn == eTurn.PlayerOne)
             {
+                m_FormGame.WaitForPushButtom = true;
                 moveCoordinate = getMoveFromHumanPlayerAndMakeCoordinate();
             }
             else
             {
                 if (m_PlayerTwo.IsAi() == true)
                 {
+                    m_FormGame.WaitForPushButtom = false;
                     if (m_MoveNum == eMoveNum.FirstMove)
                     {
                         moveCoordinate = m_PlayerTwo.AiBrain.MakingFirstMove();
@@ -162,13 +174,14 @@ namespace UI
                         moveCoordinate = m_PlayerTwo.AiBrain.MakingSecondMove(m_FirstMoveSymbol);
                     }
 
-                    m_FormGame.showBoardFromLogic(m_GameBoard.Board);
-                    System.Threading.Thread.Sleep(2000);
                 }
                 else
                 {
+                    m_FormGame.WaitForPushButtom = true;
                     moveCoordinate = getMoveFromHumanPlayerAndMakeCoordinate();
                 }
+
+                m_FormGame.showBoardFromLogic(m_GameBoard.Board, PlayerOne, PlayerTwo);
             }
 
             return moveCoordinate;
@@ -179,6 +192,7 @@ namespace UI
             m_FormGame.ShowDialog();
             return m_FormGame.LastMove;
         }
+
         /*
         private void gameRoutineAndKeepScore(GameBoard io_Board)
         {
@@ -204,7 +218,7 @@ namespace UI
         {
             if (m_FirstMoveSymbol != m_SecondMoveSymbol)
             {
-                System.Threading.Thread.Sleep(2000);
+                //System.Threading.Thread.Sleep(2000);
                 cancelLastPlayingPlayerPlay();
             }
             else
@@ -294,6 +308,7 @@ namespace UI
             {
                 m_SecondMovePoint = PlayerTwo.AiBrain.MakingSecondMove(m_FirstMoveSymbol);
                 m_SecondMoveSymbol = m_GameBoard.Board[m_SecondMovePoint.Y, m_SecondMovePoint.X].SymbolOfIcon;
+                m_MoveNum = eMoveNum.FirstMove;
             }
         }
 
@@ -306,6 +321,7 @@ namespace UI
         {
             m_GameBoard.HideIcon(m_FirstMovePoint);
             m_GameBoard.HideIcon(m_SecondMovePoint);
+            m_FormGame.showBoardFromLogic(m_GameBoard.Board, PlayerOne, PlayerTwo);
         }
 
         private void switchTurn()

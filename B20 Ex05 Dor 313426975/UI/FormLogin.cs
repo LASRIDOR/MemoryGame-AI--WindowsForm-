@@ -105,16 +105,16 @@ namespace UI
         {
             bool v_IsPlayerTwoAi = !(this.SecondPlayerNameLabel.Enabled == false);
 
-            Player playerOne = new Player(this.FirstPlayerNameTextBox.Text, false);
+            Player playerOne = new Player(this.FirstPlayerNameTextBox.Text, false, Color.Aquamarine);
             Player playerTwo;
 
             if (v_IsPlayerTwoAi == true)
             {
-                playerTwo = new Player(null, true);
+                playerTwo = new Player(null, true, Color.DarkOrchid);
             }
             else
             {
-                playerTwo = new Player(this.SecondPlayerNameTextBox.Text, false);
+                playerTwo = new Player(this.SecondPlayerNameTextBox.Text, false, Color.DarkOrchid);
             }
 
             return new SystemManager(playerOne, playerTwo, this.BoardSizeButtom.Text[0] - '0', this.BoardSizeButtom.Text[2] - '0');
