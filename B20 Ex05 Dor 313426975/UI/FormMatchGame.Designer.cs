@@ -1,6 +1,6 @@
 ﻿namespace UI
 {
-    partial class FormMatchGame
+    public partial class FormMatchGame
     {
         /// <summary>
         /// Required designer variable.
@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 

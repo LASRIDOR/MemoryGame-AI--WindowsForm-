@@ -22,8 +22,8 @@ namespace UI
                 {
                     resultManager = formLogin.ManagerPreperation;
                 }
-
-            } while (v_dialogResult == false);
+            }
+            while (v_dialogResult == false);
 
             return resultManager;
         }

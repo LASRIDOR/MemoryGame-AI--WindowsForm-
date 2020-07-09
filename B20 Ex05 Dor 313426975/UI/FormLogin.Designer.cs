@@ -1,6 +1,6 @@
 ﻿namespace UI
 {
-    partial class FormLogin
+    public partial class FormLogin
     {
         /// <summary>
         /// Required designer variable.
@@ -17,6 +17,7 @@
             {
                 components.Dispose();
             }
+
             base.Dispose(disposing);
         }
 
@@ -113,7 +114,7 @@
             this.MinimizeBox = false;
             this.Name = "FormLogin";
             this.ShowIcon = false;
-            this.Tag = "";
+            this.Tag = string.Empty;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormLogin_FormClosing);
             this.Load += new System.EventHandler(this.FormLogin_Load);
             this.Enter += new System.EventHandler(this.BoardSizeButtom_Click);

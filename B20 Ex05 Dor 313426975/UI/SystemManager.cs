@@ -86,8 +86,6 @@ namespace UI
 
         private void playerMakeMoveHisTurn()
         {
-            //m_FormGame.showBoardFromLogic(m_GameBoard.Board, PlayerOne, PlayerTwo);
-
             m_MoveNum = eMoveNum.FirstMove;
             m_FirstMovePoint = askPlayingPlayerForMoveCheckMoveAndMakeCoordinate();
             m_FirstMoveSymbol = m_GameBoard.ExposeSymbolAndTakeValue(m_FirstMovePoint);
@@ -107,7 +105,6 @@ namespace UI
 
             if (m_SecondMoveSymbol != m_FirstMoveSymbol)
             {
-                //System.Threading.Thread.Sleep(2000);
                 cancelLastPlayingPlayerPlay();
             }
             else
@@ -122,6 +119,7 @@ namespace UI
                     m_PlayerTwo.GivePlayerOnePoint();
                     m_GameBoard.PaintCubeInColor(m_FirstMovePoint, m_SecondMovePoint, m_PlayerTwo.Color);
                 }
+
                 m_FormGame.showBoardFromLogic(m_GameBoard.Board, PlayerOne, PlayerTwo);
             }
 
@@ -173,7 +171,6 @@ namespace UI
                     {
                         moveCoordinate = m_PlayerTwo.AiBrain.MakingSecondMove(m_FirstMoveSymbol);
                     }
-
                 }
                 else
                 {
@@ -191,125 +188,6 @@ namespace UI
         {
             m_FormGame.ShowDialog();
             return m_FormGame.LastMove;
-        }
-
-        /*
-        private void gameRoutineAndKeepScore(GameBoard io_Board)
-        {
-            while (io_Board.checkIfGamehasFinished() == false)
-            {
-                playingPlayerMakeMoveHisTurn();
-
-                if (m_MoveNum == eMoveNum.SecondMove)
-                {
-                    makeSecondMoveCheckForMatch();
-                    switchTurn();
-                    m_MoveNum = eMoveNum.FirstMove;
-                }
-                else
-                {
-                    makeFirstMove();
-                    m_MoveNum = eMoveNum.SecondMove;
-                }
-            }
-        }
-        */
-        public void checkMatchLastMoveAndKeepGameRoutine()
-        {
-            if (m_FirstMoveSymbol != m_SecondMoveSymbol)
-            {
-                //System.Threading.Thread.Sleep(2000);
-                cancelLastPlayingPlayerPlay();
-            }
-            else
-            {
-                if (m_PlayerTurn == eTurn.PlayerOne)
-                {
-                    m_PlayerOne.GivePlayerOnePoint();
-                }
-                else
-                {
-                    m_PlayerTwo.GivePlayerOnePoint();
-                }
-            }
-
-            if (m_PlayerTwo.IsAi() == true)
-            {
-                m_PlayerTwo.AiBrain.SetCardRevealedFromLastMove(m_FirstMovePoint, m_FirstMoveSymbol, m_SecondMovePoint, m_SecondMoveSymbol);
-            }
-
-            GameRoutineSwitchTurn();
-        }
-
-        private void GameRoutineSwitchTurn()
-        {
-            switchTurn();
-            m_MoveNum = eMoveNum.FirstMove;
-        }
-        /*
-        private void makeFirstMove()
-        {
-            Point firstMovePoint = askPlayingPlayerForMoveCheckMoveAndMakePoint(moveNum, null);
-
-            m_FirstMoveSymbol = m_Ui.representTheBoardWithMove(firstMovePoint);
-        }
-
-        private Point askPlayingPlayerForMoveCheckMoveAndMakePoint()
-        {
-            Point movePoint;
-            bool v_AlreadyExposed;
-
-            do
-            {
-                movePoint = askPlayingPlayerForMoveAndMakePoint(i_MoveNum, i_SymbolOfFirstMoveCardRevealed);
-                v_AlreadyExposed = CheckIfPointisExposed(movePoint);
-            }
-            while (v_AlreadyExposed == true);
-
-            return movePoint;
-        }
-        */
-        /*
-        private Point askPlayingPlayerForMoveAndMakePoint(eMoveNum io_MoveNum, int? i_SymbolOfFirstMoveCardRevealed)
-        {
-            Point movePoint;
-
-            if (m_PlayerTurn == eTurn.PlayerTwo)
-            {
-                if (PlayerTwo.IsAi() == true)
-                {
-                    if (io_MoveNum == SystemManager.eMoveNum.FirstMove)
-                    {
-                        movePoint = PlayerTwo.AiBrain.MakingFirstMove();
-                    }
-                    else
-                    {
-                        movePoint = PlayerTwo.AiBrain.MakingSecondMove(i_SymbolOfFirstMoveCardRevealed.Value);
-                    }
-
-                    System.Threading.Thread.Sleep(2000);
-                }
-            }
-
-            return movePoint;
-        }
-        */
-
-        public void AITurn()
-        {
-
-            if (m_MoveNum == eMoveNum.FirstMove)
-            {
-                m_FirstMovePoint = PlayerTwo.AiBrain.MakingFirstMove();
-                m_FirstMoveSymbol = m_GameBoard.Board[m_FirstMovePoint.Y, m_FirstMovePoint.X].SymbolOfIcon;
-                m_MoveNum = eMoveNum.SecondMove;
-            }
-            else
-            {
-                m_SecondMovePoint = PlayerTwo.AiBrain.MakingSecondMove(m_FirstMoveSymbol);
-                m_SecondMoveSymbol = m_GameBoard.Board[m_SecondMovePoint.Y, m_SecondMovePoint.X].SymbolOfIcon;
-                m_MoveNum = eMoveNum.FirstMove;
-            }
         }
 
         public bool CheckIfPointisExposed(Point io_CurrMovePoint)

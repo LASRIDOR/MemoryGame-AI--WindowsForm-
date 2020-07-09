@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using MemoryLogic;
 
@@ -69,7 +65,7 @@ namespace UI
             }
             else
             {
-                if(pRow == '5' && pCol+1 == '5')
+                if(pRow == '5' && pCol + 1 == '5')
                 {
                     ++pCol;
                 }
@@ -103,12 +99,12 @@ namespace UI
 
         public SystemManager SetGame()
         {
-            bool v_IsPlayerTwoAi = !(this.SecondPlayerNameLabel.Enabled == false);
+            //bool v_IsPlayerTwoAi = !(this.SecondPlayerNameTextBox.Enabled == false);
 
             Player playerOne = new Player(this.FirstPlayerNameTextBox.Text, false, Color.Aquamarine);
             Player playerTwo;
 
-            if (v_IsPlayerTwoAi == true)
+            if (SecondPlayerNameTextBox.Text == "-computer-")
             {
                 playerTwo = new Player(null, true, Color.DarkOrchid);
             }
@@ -122,7 +118,6 @@ namespace UI
 
         private void FormLogin_Load(object sender, EventArgs e)
         {
-
         }
     }
 }
